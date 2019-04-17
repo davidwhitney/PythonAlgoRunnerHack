@@ -18,12 +18,12 @@ class Runtime:
         algo_module.invoke(*arg_values.values())
 
 
-    def select_algo_to_execute(self):
+    def select_algo_to_execute(self) -> str:
         if len(sys.argv) > 1:
             return sys.argv[1]
         return "temp_test_algo"
         
-    def import_algo(self, algo):
+    def import_algo(self, algo: str):
         try:
             return __import__(algo)
         except ImportError:
