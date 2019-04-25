@@ -1,29 +1,47 @@
-class DataSourcer:
-    def __init__(self):
-        self.registered_data_sources = {
-              "some_data_requirement": self.load_some_data_requirement,
-              "another_data_requirement": self.load_some_data_requirement,
-              "something_else_here": self.load_some_data_requirement,
-          }
+from typing import List
 
-    def source_required_data(self, arg_spec):
+class DataSourcer:
+    def __init__(self, known_sources, fallback_data_source = None):
+        self.registered_data_sources = known_sources
+        self.fallback = fallback_data_source or self.throw_error
+
+    def source_required_data(self, registered_data_sources: List[str]):
+        if not type(registered_data_sources) is list:
+            raise Exception("Parameter 'registered_data_sources' was expected to be a list of strings.")
+
         requested_data = {}
 
-        # This is not a real implementation - I imagine we'd look-up S3 buckets or table keys or something here
-        # Ideally something that we can run a list operation on, so when people request things that aren't
-        # in our data sources, we can throw an error with a list of *actual* data sources available.
-
-        for key in arg_spec:
+        for key in registered_data_sources:
             print("Sourcing data for " + key)
 
-            if key not in self.registered_data_sources:
-                raise Exception("No registered data source for " + key + " exists. This is either a typo or you're trying to get data we cannot source.")
+            if key in self.registered_data_sources:
+                data_for = self.registered_data_sources[key]
+            else:
+                data_for = self.fallback      
 
-            factory = self.registered_data_sources[key]
-            value = factory()
-            requested_data[key] = value
+            requested_data[key] = data_for(key)
 
         return requested_data
 
-    def load_some_data_requirement(self):
-        return "1234"
+    def throw_error(self, key):
+        raise Exception("No registered data source for " + key + " exists. This is either a typo or you're trying to get data we cannot source.")
+
+class HardCodedDataStrategy:
+    def __init__(self, known_sources, fallback_data_source = None):
+        self.registered_data_sources = known_sources
+        self.fallback = fallback_data_source or self.throw_error
+
+    def source_required_data(self, key):
+        return None
+        
+    def throw_error(self, key):
+        raise Exception("No registered data source for " + key + " exists. This is either a typo or you're trying to get data we cannot source.")
+        
+
+class DataSourcedFromThisProcessStrategy:
+    def source_required_data(self, key):
+        return None
+
+class DataSourcedFromS3Strategy:
+    def source_required_data(self, key):
+        return None      

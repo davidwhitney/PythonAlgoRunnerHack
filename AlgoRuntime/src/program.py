@@ -1,11 +1,11 @@
-import sys
+import importlib
 import inspect
-import runtime as Runtime
+runtime = importlib.import_module('runtime')
 
 def main():
     print("Python AlgoRuntime")
 
-    rt = Runtime.Runtime()
+    rt = runtime.Runtime()
     rt.execute()
 
 if __name__ == '__main__':
