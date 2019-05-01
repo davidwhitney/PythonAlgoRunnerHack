@@ -27,16 +27,22 @@ class DataSourcer:
         raise Exception("No registered data source for " + key + " exists. This is either a typo or you're trying to get data we cannot source.")
 
 class HardCodedDataStrategy:
-    def __init__(self, known_sources, fallback_data_source = None):
+    def __init__(self, known_sources):
         self.registered_data_sources = known_sources
-        self.fallback = fallback_data_source or self.throw_error
+        self.fallback = self.throw_error
 
     def source_required_data(self, key):
-        return None
+        print("Sourcing data for " + key)
+        if key in self.registered_data_sources:
+            data_for = self.registered_data_sources[key]
+        else:
+            data_for = self.fallback 
+
+        return data_for(key)
         
     def throw_error(self, key):
         raise Exception("No registered data source for " + key + " exists. This is either a typo or you're trying to get data we cannot source.")
-        
+
 
 class DataSourcedFromThisProcessStrategy:
     def source_required_data(self, key):
