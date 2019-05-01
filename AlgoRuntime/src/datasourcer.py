@@ -23,7 +23,7 @@ class DataSourcer:
             if requested_data[key] is None:
                 raise Exception("No registered data source that can provide '" + key + "' exists. This is either a typo or you're trying to get data we cannot source.")
 
-        return requested_data        
+        return requested_data
 
 class HardCodedDataStrategy:
     def __init__(self, known_sources):
