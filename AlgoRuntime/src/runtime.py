@@ -12,10 +12,14 @@ class Runtime:
         arg_spec = inspect.getfullargspec(algo_module.invoke).args
 
         sourcer = datasourcer.DataSourcer({
-            "some_data_requirement": lambda key: "foo",
-            "another_data_requirement": lambda key: "foo",
-            "something_else_here": lambda key: "foo",
-        }, self.source_unregistered_data)
+            datasourcer.HardCodedDataStrategy({
+                "some_data_requirement": "foo",
+                "another_data_requirement": "bar",
+                "something_else_here": "baz",
+            }),
+            datasourcer.DataSourcedFromThisProcessStrategy(),
+            datasourcer.DataSourcedFromS3Strategy()
+        })
 
         arg_values = sourcer.source_required_data(arg_spec)
         algo_module.invoke(*arg_values.values())
