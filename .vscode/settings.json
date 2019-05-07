@@ -1,16 +1,16 @@
 {
     "python.linting.pylintEnabled": true,
-    "python.unitTest.unittestArgs": [
+    "python.testing.unittestArgs": [
         "-v",
         "-s",
         "./AlgoRuntime",
         "-p",
         "*_test.py"
     ],
-    "python.unitTest.pyTestEnabled": false,
-    "python.unitTest.nosetestsEnabled": false,
-    "python.unitTest.unittestEnabled": true,
-    "python.unitTest.pyTestArgs": [
+    "python.testing.pyTestEnabled": false,
+    "python.testing.nosetestsEnabled": false,
+    "python.testing.unittestEnabled": true,
+    "python.testing.pyTestArgs": [
         "AlgoRuntime/"
     ],
     "python.pythonPath": "C:\\Python37\\python.exe"
