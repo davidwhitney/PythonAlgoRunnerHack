@@ -9,7 +9,13 @@ algofactory = importlib.import_module('algofactory')
 
 class Runtime:
     def __init__(self):
-        self.factory = algofactory.AlgoFactory()
+        self.conventions = {
+            "supported_entrypoints": ["invoke", "run", "execute", "start", "main", "train"],
+            "verify_filename": "verify.py",
+            "verify_function": "verify"
+        }
+
+        self.factory = algofactory.AlgoFactory(self.conventions)
         self.sourcer = datasourcer.DataSourcer({
             datasourcer.DataSourcedFromThisProcessStrategy(),
             datasourcer.HardCodedDataStrategy({

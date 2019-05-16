@@ -1,6 +1,6 @@
 import unittest
 import importlib
-import AlgoRuntime.src.datasourcer as datasourcer
+import datasourcer as datasourcer
 
 class DataSourcerTest(unittest.TestCase):
     def test_source_required_data_when_key_is_not_found(self):

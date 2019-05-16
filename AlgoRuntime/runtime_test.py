@@ -1,6 +1,6 @@
 import unittest
 import importlib
-import AlgoRuntime.src.runtime as runtime
+import runtime as runtime
 
 class RuntimeTest(unittest.TestCase):
     def test_can_init(self):
