@@ -3,9 +3,11 @@ import importlib
 import inspect
 datasourcer = importlib.import_module('datasourcer')
 datapersister = importlib.import_module('datapersister')
+algofactory = importlib.import_module('algofactory')
 
 class Runtime:
     def __init__(self):
+        self.factory = algofactory.AlgoFactory()
         self.sourcer = datasourcer.DataSourcer({
             datasourcer.DataSourcedFromThisProcessStrategy(),
             datasourcer.HardCodedDataStrategy({
@@ -18,35 +20,21 @@ class Runtime:
         self.persister = datapersister.DataPersister()
 
     def execute(self):
-        algo = self.select_algo_to_execute()
-        algo_module = self.import_algo(algo)
+        algo_name = self.select_algo_to_execute()        
+        algo = self.factory.create_algo_proxy(algo_name)   
+        arg_values = self.sourcer.source_required_data(algo.entrypoint_arg_spec)
+        
+        result = algo.execute(arg_values)
+        algo.verify(result)
 
-        entrypoint = self.select_entrypoint(algo_module)
-        arg_spec = inspect.getfullargspec(entrypoint).args
-        arg_values = self.sourcer.source_required_data(arg_spec)
-
-        result = entrypoint(*arg_values.values())
         self.persister.store(result)
 
     def select_algo_to_execute(self) -> str:
-        algo = "temp_test_algo"
+        algo_name = "temp_test_algo"
         if len(sys.argv) > 1:
-            algo = sys.argv[1]
-        print("Bootstrapping " + algo)
-        return algo
-        
-    def select_entrypoint(self, algo_module):
-        supported_entrypoints = ["invoke", "run", "execute", "start", "main", "train"]
-        discovered_entrypoints = list(filter(lambda name: hasattr(algo_module, name), supported_entrypoints))
-        selected_entrypoint = next(iter(discovered_entrypoints), None)
-        return getattr(algo_module, selected_entrypoint)
-        
-    def import_algo(self, algo: str):
-        try:
-            return __import__(algo)
-        except ImportError:
-            print("Could not import algorithm " + algo)
-            exit -1
+            algo_name = sys.argv[1]
+        print("Bootstrapping " + algo_name)
+        return algo_name
 
 if __name__ == '__main__':
     Runtime().execute()
