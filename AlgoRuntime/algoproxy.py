@@ -10,9 +10,14 @@ class AlgoProxy:
         self.verify_method = verify_method
 
     def execute(self, arg_values):
-        self.entrypoint(*arg_values.values())
+        self.last_execution_result = self.entrypoint(*arg_values.values())
+        return self.last_execution_result
 
-    def verify(self, result):
+    def verify(self, result = None):
         if self.verify_method is None:
-            return        
+            return
+
+        if(result is None):
+            result = self.last_execution_result
+
         self.verify_method(result)

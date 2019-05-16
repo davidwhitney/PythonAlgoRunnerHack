@@ -6,16 +6,16 @@ import logging
 datasourcer = importlib.import_module('datasourcer')
 datapersister = importlib.import_module('datapersister')
 algofactory = importlib.import_module('algofactory')
+pipeline = importlib.import_module('pipeline')
 
 class Runtime:
     def __init__(self):
-        self.conventions = {
+        self.factory = algofactory.AlgoFactory({
             "supported_entrypoints": ["invoke", "run", "execute", "start", "main", "train"],
             "verify_filename": "verify.py",
             "verify_function": "verify"
-        }
+        })
 
-        self.factory = algofactory.AlgoFactory(self.conventions)
         self.sourcer = datasourcer.DataSourcer({
             datasourcer.DataSourcedFromThisProcessStrategy(),
             datasourcer.HardCodedDataStrategy({
@@ -25,17 +25,21 @@ class Runtime:
             }),
             datasourcer.DataSourcedFromS3Strategy()
         })
+        
         self.persister = datapersister.DataPersister()
 
     def execute(self):
         algo_name = self.select_algo_to_execute()        
-        algo = self.factory.create_algo_proxy(algo_name)   
+        algo = self.factory.create_algo_proxy(algo_name)
         arg_values = self.sourcer.source_required_data(algo.entrypoint_arg_spec)
-        
-        result = algo.execute(arg_values)
-        algo.verify(result)
 
-        self.persister.store(result)
+        pipeline.Pipeline([
+            lambda ctx: algo.execute(arg_values),
+            lambda ctx: algo.verify(),
+            lambda ctx: self.persister.store(algo.last_execution_result, ctx)
+        ]).execute()
+        
+        logging.info("Pipeline completed.")
 
     def select_algo_to_execute(self) -> str:
         algo_name = "temp_test_algo"
