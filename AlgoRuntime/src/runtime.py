@@ -1,6 +1,8 @@
 import sys
 import importlib
 import inspect
+import logging
+
 datasourcer = importlib.import_module('datasourcer')
 datapersister = importlib.import_module('datapersister')
 algofactory = importlib.import_module('algofactory')
@@ -33,8 +35,10 @@ class Runtime:
         algo_name = "temp_test_algo"
         if len(sys.argv) > 1:
             algo_name = sys.argv[1]
-        print("Bootstrapping " + algo_name)
+        logging.info("Bootstrapping " + algo_name)
         return algo_name
 
-if __name__ == '__main__':
+if __name__ == '__main__':    
+    logging.basicConfig(filename='runtime.log', level=logging.DEBUG)
+    logging.getLogger().addHandler(logging.StreamHandler())
     Runtime().execute()

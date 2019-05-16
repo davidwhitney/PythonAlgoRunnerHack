@@ -1,4 +1,5 @@
 from typing import List
+import logging
 
 class DataSourcer:
     def __init__(self, data_providers):
@@ -16,7 +17,7 @@ class DataSourcer:
             for provider in self.data_providers:
                 any_data = provider.source_required_data(key)
                 if any_data is not None:
-                    print("Sourced data for '" + key + "' from " + provider.__class__.__name__)
+                    logging.info("Sourced data for '" + key + "' from " + provider.__class__.__name__)
                     requested_data[key] = any_data
                     break
 

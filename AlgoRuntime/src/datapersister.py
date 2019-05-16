@@ -1,3 +1,5 @@
+import logging
+
 class DataPersister:
     def store(self, results):
-        print("Storing data...")
+        logging.info("Storing data...")

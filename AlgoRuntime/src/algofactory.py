@@ -1,6 +1,8 @@
 import sys
 import importlib
 import inspect
+import logging
+
 algoproxy = importlib.import_module('algoproxy')
 
 class AlgoFactory:
@@ -23,16 +25,16 @@ class AlgoFactory:
         try:
             return __import__(algo)
         except ImportError:
-            print("Could not import algorithm " + algo)
+            logging.critical("Could not import algorithm " + algo)
             exit -1
     
     def __find_verification_function(self, algo):
         try:        
             return self.import_from(algo + ".verify", "verify")            
         except ImportError:
-            print("Skipping verification. No verify.py file found in package.")
+            logging.info("Skipping verification. No verify.py file found in package.")
         except AttributeError:
-            print("Skipping verification. No 'def verifly(algo_output)' function found in verify.py.")
+            logging.info("Skipping verification. No 'def verifly(algo_output)' function found in verify.py.")
 
     def __import_from(self, module, name):
         module = __import__(module, fromlist=[name])
