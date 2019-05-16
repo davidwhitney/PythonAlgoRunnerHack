@@ -12,7 +12,7 @@ class DataSourcer:
         requested_data = {}
 
         for key in registered_data_sources:
-            print(f"Searching for '{key}' in data providers.")
+            logging.debug(f"Searching for '{key}' in data providers.")
 
             for provider in self.data_providers:
                 any_data = provider.source_required_data(key)

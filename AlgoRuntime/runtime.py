@@ -12,10 +12,9 @@ class Runtime:
     def __init__(self):
         self.factory = algofactory.AlgoFactory({
             "supported_entrypoints": ["invoke", "run", "execute", "start", "main", "train"],
-            "verify_filename": "verify.py",
+            "verify_filename": "verify",
             "verify_function": "verify"
         })
-
         self.sourcer = datasourcer.DataSourcer({
             datasourcer.DataSourcedFromThisProcessStrategy(),
             datasourcer.HardCodedDataStrategy({
@@ -25,19 +24,18 @@ class Runtime:
             }),
             datasourcer.DataSourcedFromS3Strategy()
         })
-        
         self.persister = datapersister.DataPersister()
 
     def execute(self):
         algo_name = self.select_algo_to_execute()        
         algo = self.factory.create_algo_proxy(algo_name)
-        arg_values = self.sourcer.source_required_data(algo.entrypoint_arg_spec)
 
-        pipeline.Pipeline([
-            lambda ctx: algo.execute(arg_values),
-            lambda ctx: algo.verify(),
-            lambda ctx: self.persister.store(algo.last_execution_result, ctx)
-        ]).execute()
+        pipeline.Pipeline({
+            "Prepare": lambda ctx: [ algo.prepare_parameters(self.sourcer.source_required_data(algo.entrypoint_arg_spec)) ],
+            "Execute": lambda ctx: [ algo.execute() ],
+            "Verify" : lambda ctx: [ algo.verify() ],
+            "Save"   : lambda ctx: [ self.persister.store(algo.last_execution_result, ctx) ]
+        }).execute()
         
         logging.info("Pipeline completed.")
 

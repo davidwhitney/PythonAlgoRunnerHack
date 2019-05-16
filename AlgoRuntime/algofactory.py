@@ -9,7 +9,9 @@ class AlgoFactory:
     def __init__(self, conventions):
         self.conventions = conventions
 
-    def create_algo_proxy(self, algo_name):        
+    def create_algo_proxy(self, algo_name):
+        logging.debug(f"Generating a proxy to module: '{algo_name}'.")
+
         algo_module = self.__import_algo(algo_name)
 
         entrypoint = self.__select_entrypoint(algo_module)
@@ -22,6 +24,8 @@ class AlgoFactory:
         supported_entrypoints = self.conventions["supported_entrypoints"]
         discovered_entrypoints = list(filter(lambda name: hasattr(algo_module, name), supported_entrypoints))
         selected_entrypoint = next(iter(discovered_entrypoints), None)
+        
+        logging.debug(f"Found module entry point '{selected_entrypoint}'.")
         return getattr(algo_module, selected_entrypoint)
 
     def __import_algo(self, algo: str):
@@ -33,12 +37,14 @@ class AlgoFactory:
     
     def __find_verification_function(self, algo):
         try:      
-            verify_filename = self.conventions["verify_filename"];  
-            return self.import_from(f"{algo}.{verify_filename}", self.conventions["verify_function"])            
+            verify_filename = self.conventions["verify_filename"];
+            import_path = f"{algo}.{verify_filename}"
+            logging.debug(f"Attempting to import verification function: '{import_path}'...")
+            return self.import_from(import_path, self.conventions["verify_function"])            
         except ImportError:
             logging.info("Skipping verification. No verify.py file found in package.")
         except AttributeError:
-            logging.info("Skipping verification. No 'def verifly(algo_output)' function found in verify.py.")
+            logging.info("Skipping verification. No 'def verify(algo_output)' function found in verify.py.")
 
     def __import_from(self, module, name):
         module = __import__(module, fromlist=[name])
