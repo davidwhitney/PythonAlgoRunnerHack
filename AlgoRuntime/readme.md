@@ -5,13 +5,35 @@ It's designed to run inside a container, or be submitted to a spark cluster.
 
 It's responsible for sourcing requested data, executing and instrumenting algorithms, and persisting the outputs.
 
+* TL;DR quickstart
 * Anatomy of a package
 * Supported Entrypoint conventions
 * Expected outputs
 * Dependency management
 * Verification and QPIs
 
-## Anatomy of a package
+# TL;DR quickstart
+
+* Install `setuptools` and `wheel`.
+
+    > python -m pip install --user --upgrade setuptools wheel
+
+* Copy the contents of `AlgoRuntime.Archetypes\PythonAlgoTemplate`
+* Rename algo_name to your algo name
+* Modify the setup.py file to correct the name change
+* Modify algo_name/__init__.py to add your algo code
+* Modify verify.py to add your verification checks
+* Open a terminal / prompt inside your new directory
+
+	> python setup.py sdist bdist_wheel
+
+* An archive will be created in dist/*.tar.gz - this is your pip archive.
+* Publish your package as version 1.0.0
+* Ping our build service to publish your algo into Aaas.
+* Your algorithm will run when data changes
+* To run it for the first time, use the Aaas web portal
+
+# Anatomy of a package
 
 Our packages require a few mandatory things to make them work.
 
@@ -28,7 +50,7 @@ Our packages require a few mandatory things to make them work.
 * requirements.txt - List of requirements to be restored by pip during build process
 * verify.py - Support for verification / QPIs
 
-## Supported Entrypoint conventions
+# Supported Entrypoint conventions
 
 By default, we'll install your package and attempt to find any of the following methods, in this order:
 
@@ -68,7 +90,7 @@ We support the following additional injected components and properties:
 * context - runtime context, including invocation parameters
 * TBC
 
-## Expected outputs
+# Expected outputs
 
 Your entrypoint should return one of two data structures, either:
 
@@ -78,12 +100,14 @@ Your entrypoint should return one of two data structures, either:
 In the case of a single data frame, we'll store this as the default output of your algorithm.
 When you return a dictionary, we'll store each output distinctly, using the named key.
 
-## Dependency management
+If you return nothing, we'll throw an error.
+
+# Dependency management
 
 Package dependencies should be listed in requirements.txt
 Pip will be used to restore these dependencies into the runtime environment.
 
-## Verification and QPIs
+# Verification and QPIs
 
 Providing a verify.py file with a single function
 
