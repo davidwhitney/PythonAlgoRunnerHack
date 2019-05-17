@@ -96,7 +96,29 @@ Your entrypoint should return one of two data structures, either:
 * A dictionary, with named data frames
 
 In the case of a single data frame, we'll store this as the default output of your algorithm.
+
+```python
+def invoke(my_cool_algo__foo):
+    # Some logic
+    data_frame = self.process_something(my_cool_algo__foo)
+    return data_frame
+
+```
+
 When you return a dictionary, we'll store each output distinctly, using the named key.
+
+
+```python
+def invoke(my_cool_algo__foo):
+    # Some logic
+    data_frame = self.process_something(my_cool_algo__foo)
+    data_frame2 = self.process_something(my_cool_algo__foo)
+
+    return {
+        "friendly_name_one": data_frame,
+        "friendly_name_two": data_frame2
+    }
+```
 
 If you return nothing, we'll throw an error.
 
