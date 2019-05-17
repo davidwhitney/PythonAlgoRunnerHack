@@ -1,3 +1,5 @@
+from markdown import markdown
+
 def invoke( some_data_requirement, 
             another_data_requirement,
             something_else_here
@@ -7,3 +9,6 @@ def invoke( some_data_requirement,
     print(some_data_requirement)
     print(another_data_requirement)
     print(something_else_here)
+    
+    something = markdown(u'Hi from a dependency')
+    print(something)
