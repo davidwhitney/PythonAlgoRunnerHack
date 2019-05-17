@@ -37,14 +37,12 @@ It's responsible for sourcing requested data, executing and instrumenting algori
 
 Our packages require a few mandatory things to make them work.
 
-'''
     /setup.py
     /README.md
     /algo_name
     /algo_name/__init__.py
     /algo_name/requirements.txt
     /algo_name/verify.py
-'''
 
 * __init__.py - The package entrypoint
 * requirements.txt - List of requirements to be restored by pip during build process
@@ -54,12 +52,12 @@ Our packages require a few mandatory things to make them work.
 
 By default, we'll install your package and attempt to find any of the following methods, in this order:
 
-* "invoke"
-* "run"
-* "execute"
-* "start"
-* "main"
-* "train"
+    "invoke"
+    "run"
+    "execute"
+    "start"
+    "main"
+    "train"
 
 Declare any dependencies on data as constructor parameters.
 
