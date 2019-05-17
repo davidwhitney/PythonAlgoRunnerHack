@@ -18,3 +18,22 @@ To create a package, you need to install `setuptools` and `wheel`.
 An archive will be created in dist/*.tar.gz - this is your pip archive.
 
 The runtime will pull, install, and execute your code from this package.
+
+## Anatomy of a package
+
+Our packages require a few mandatory things to make them work.
+
+'''
+    /setup.py
+    /README.md
+    /algo_name
+    /algo_name/__init__.py
+    /algo_name/requirements.txt
+    /algo_name/verify.py
+'''
+
+* __init__.py - The package entrypoint
+* requirements.txt - List of requirements to be restored by pip during build process
+* verify.py - Support for verification / QPIs
+
+See the README.md for the Algorithm Runtime for more detailed explainations of how our supported conventions.
