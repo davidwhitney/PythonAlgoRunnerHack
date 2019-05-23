@@ -30,7 +30,7 @@ class DataSourcerTest(unittest.TestCase):
 
         result = ds.source_required_data(["abc"])
 
-        self.assertEqual(result, {'abc': 'foo'})
+        self.assertEqual(result["abc"], "foo")
 
 if __name__ == '__main__':
     unittest.main()

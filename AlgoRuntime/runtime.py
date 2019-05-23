@@ -17,6 +17,7 @@ class Runtime:
         })
         self.sourcer = datasourcer.DataSourcer({
             datasourcer.DataSourcedFromThisProcessStrategy(),
+            datasourcer.DataSourcedFromAnnotationStrategy(),
             datasourcer.HardCodedDataStrategy({
                 "some_data_requirement": "foo",
                 "another_data_requirement": "bar",

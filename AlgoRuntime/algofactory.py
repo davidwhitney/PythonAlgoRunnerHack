@@ -14,11 +14,11 @@ class AlgoFactory:
 
         algo_module = self.__import_algo(algo_name)
 
-        entrypoint = self.__select_entrypoint(algo_module)
-        entrypoint_arg_spec = inspect.getfullargspec(entrypoint).args
-
+        entrypoint = self.__select_entrypoint(algo_module)        
+        entrypoint_args = self.__generate_parameter_table(entrypoint)
         verify_method = self.__find_verification_function(algo_name)
-        return algoproxy.AlgoProxy(algo_name, entrypoint, entrypoint_arg_spec, verify_method)
+
+        return algoproxy.AlgoProxy(algo_name, entrypoint, entrypoint_args, verify_method)
     
     def __select_entrypoint(self, algo_module):
         supported_entrypoints = self.conventions["supported_entrypoints"]
@@ -34,6 +34,17 @@ class AlgoFactory:
         except ImportError:
             logging.critical("Could not import algorithm " + algo)
             exit -1
+
+    def __generate_parameter_table(self, entrypoint):
+        entrypoint_args = {}
+        for arg in inspect.getfullargspec(entrypoint).args:
+            entrypoint_args[arg] = None
+
+            if arg in entrypoint.__annotations__:
+                logging.debug(f"Found annotation for {arg}")
+                entrypoint_args[arg] = entrypoint.__annotations__[arg]
+        
+        return entrypoint_args
     
     def __find_verification_function(self, algo):
         try:      
