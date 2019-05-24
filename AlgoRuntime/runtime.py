@@ -3,28 +3,15 @@ import importlib
 import inspect
 import logging
 
-datasourcer = importlib.import_module('datasourcer')
-datapersister = importlib.import_module('datapersister')
-algofactory = importlib.import_module('algofactory')
-pipeline = importlib.import_module('pipeline')
+import datasourcer as datasourcer
+import datapersister as datapersister
+import algofactory as algofactory
+import pipeline as pipeline
 
 class Runtime:
     def __init__(self):
-        self.factory = algofactory.AlgoFactory({
-            "supported_entrypoints": ["invoke", "run", "execute", "start", "main", "train"],
-            "verify_filename": "verify",
-            "verify_function": "verify"
-        })
-        self.sourcer = datasourcer.DataSourcer([
-            datasourcer.DataSourcedFromThisProcessStrategy(),
-            datasourcer.DataSourcedFromAnnotationStrategy(),
-            datasourcer.HardCodedDataStrategy({
-                "some_data_requirement": "foo",
-                "another_data_requirement": "bar",
-                "something_else_here": "baz",
-            }),
-            datasourcer.DataSourcedFromS3Strategy()
-        ])
+        self.factory = algofactory.AlgoFactory()
+        self.sourcer = datasourcer.DataSourcer()
         self.persister = datapersister.DataPersister()
 
     def execute(self):

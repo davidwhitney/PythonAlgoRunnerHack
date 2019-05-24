@@ -2,12 +2,11 @@ import sys
 import importlib
 import inspect
 import logging
-
-algoproxy = importlib.import_module('algoproxy')
+import algoproxy as algoproxy
 
 class AlgoFactory:
-    def __init__(self, conventions):
-        self.conventions = conventions
+    def __init__(self, conventions = None):
+        self.conventions = conventions or default_configuration()
 
     def create_algo_proxy(self, algo_name):
         logging.debug(f"Generating a proxy to module: '{algo_name}'.")
@@ -56,3 +55,11 @@ class AlgoFactory:
             logging.info("Skipping verification. No verify.py file found in package.")
         except AttributeError:
             logging.info("Skipping verification. No 'def verify(algo_output)' function found in verify.py.")
+
+
+def default_configuration():
+    return {
+        "supported_entrypoints": ["invoke", "run", "execute", "start", "main", "train"],
+        "verify_filename": "verify",
+        "verify_function": "verify"
+    }

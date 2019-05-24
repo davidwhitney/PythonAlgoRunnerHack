@@ -1,8 +1,7 @@
 import importlib
 import inspect
 import logging
-
-runtime = importlib.import_module('runtime')
+import runtime as runtime
 
 def main():    
     print("Python AlgoRuntime")

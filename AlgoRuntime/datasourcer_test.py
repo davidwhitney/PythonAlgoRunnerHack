@@ -1,11 +1,12 @@
 import unittest
 import importlib
 import datasourcer as datasourcer
+import datasources.hardcoded as hardcoded
 
 class DataSourcerTest(unittest.TestCase):
     def test_source_required_data_when_key_is_not_found(self):
         ds = datasourcer.DataSourcer([
-                datasourcer.HardCodedDataStrategy({})
+                hardcoded.HardCodedDataStrategy({})
         ])
 
         with self.assertRaises(Exception):
@@ -13,9 +14,7 @@ class DataSourcerTest(unittest.TestCase):
 
     def test_source_required_data_when_source_is_registered_sources_data_correctly(self):
         ds = datasourcer.DataSourcer([
-                datasourcer.HardCodedDataStrategy({ "abc": "foo" }),
-                datasourcer.DataSourcedFromThisProcessStrategy(),
-                datasourcer.DataSourcedFromS3Strategy(),
+                hardcoded.HardCodedDataStrategy({ "abc": "foo" }),
         ]) 
 
         result = ds.source_required_data({"abc": None})
@@ -25,8 +24,8 @@ class DataSourcerTest(unittest.TestCase):
 
     def test_source_required_data_when_source_is_registered_many_times_first_source_wins(self):
         ds = datasourcer.DataSourcer([
-                datasourcer.HardCodedDataStrategy({ "abc": "foo" }),
-                datasourcer.HardCodedDataStrategy({ "abc": "bar" }),
+                hardcoded.HardCodedDataStrategy({ "abc": "foo" }),
+                hardcoded.HardCodedDataStrategy({ "abc": "bar" }),
         ]) 
 
         result = ds.source_required_data({"abc": None})

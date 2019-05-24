@@ -3,9 +3,14 @@ import logging
 import importlib
 param = importlib.import_module('sdk.param')
 
+import datasources.annotations as annotations
+import datasources.hardcoded as hardcoded
+import datasources.s3bucket as s3bucket
+import datasources.thisprocess as thisprocess
+
 class DataSourcer:
-    def __init__(self, data_providers):
-        self.data_providers = data_providers
+    def __init__(self, data_providers = None):
+        self.data_providers = data_providers or default_configuration()
 
     def source_required_data(self, data_requirements):
         if not type(data_requirements) is dict:
@@ -39,30 +44,16 @@ class DataRequirement:
             return self.annotation.lookup_key
         return self.key
 
-class HardCodedDataStrategy:
-    def __init__(self, known_sources):
-        self.registered_data_sources = known_sources
 
-    def source_required_data(self, requirement):
-        if requirement.search_key() in self.registered_data_sources:
-            return self.registered_data_sources[requirement.search_key()]
-        else:
-            return None
 
-class DataSourcedFromThisProcessStrategy:
-    def source_required_data(self, requirement):
-        return None
-
-class DataSourcedFromS3Strategy:
-    def source_required_data(self, requirement):
-         raise Exception("S3 is not yet supported.")
-
-class DataSourcedFromAnnotationStrategy:
-    def source_required_data(self, requirement):
-        if requirement.annotation is not None and isinstance(requirement.annotation, param.source_from):
-            return requirement.annotation.callback()
-
-        if requirement.annotation is not None and isinstance(requirement.annotation, param.from_uri):
-            raise Exception("This attribute is not yet supported.")
-
-        return None
+def default_configuration():
+    return [
+        thisprocess.DataSourcedFromThisProcessStrategy(),
+        annotations.DataSourcedFromAnnotationStrategy(),
+        hardcoded.HardCodedDataStrategy({
+            "some_data_requirement": "foo",
+            "another_data_requirement": "bar",
+            "something_else_here": "baz",
+        }),
+        s3bucket.DataSourcedFromS3Strategy()
+    ]
