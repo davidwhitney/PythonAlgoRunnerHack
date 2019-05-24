@@ -51,7 +51,7 @@ class AlgoFactory:
             verify_filename = self.conventions["verify_filename"];
             import_path = f"{algo}.{verify_filename}"
             logging.debug(f"Attempting to import verification function: '{import_path}'...")
-            return self.import_from(import_path, self.conventions["verify_function"])            
+            return getattr(importlib.import_module(import_path), self.conventions["verify_function"])
         except ImportError:
             logging.info("Skipping verification. No verify.py file found in package.")
         except AttributeError:

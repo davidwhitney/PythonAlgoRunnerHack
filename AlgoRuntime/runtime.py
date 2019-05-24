@@ -15,7 +15,7 @@ class Runtime:
             "verify_filename": "verify",
             "verify_function": "verify"
         })
-        self.sourcer = datasourcer.DataSourcer({
+        self.sourcer = datasourcer.DataSourcer([
             datasourcer.DataSourcedFromThisProcessStrategy(),
             datasourcer.DataSourcedFromAnnotationStrategy(),
             datasourcer.HardCodedDataStrategy({
@@ -24,7 +24,7 @@ class Runtime:
                 "something_else_here": "baz",
             }),
             datasourcer.DataSourcedFromS3Strategy()
-        })
+        ])
         self.persister = datapersister.DataPersister()
 
     def execute(self):
