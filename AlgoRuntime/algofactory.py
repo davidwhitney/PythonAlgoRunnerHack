@@ -56,8 +56,3 @@ class AlgoFactory:
             logging.info("Skipping verification. No verify.py file found in package.")
         except AttributeError:
             logging.info("Skipping verification. No 'def verify(algo_output)' function found in verify.py.")
-
-    def __import_from(self, module, name):
-        module = __import__(module, fromlist=[name])
-        return getattr(module, name)
-
