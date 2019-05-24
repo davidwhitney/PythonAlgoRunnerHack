@@ -1,5 +1,5 @@
 import importlib
-param = importlib.import_module('sdk.param')
+import sdk.param as param
 
 class DataRequirement:
     def __init__(self, key, annotation):

@@ -1,7 +1,7 @@
 import unittest
 import importlib
 import datasourcer as datasourcer
-import datasources.hardcoded as hardcoded
+import hardcodeddatastrategy as hardcoded
 
 class DataSourcerTest(unittest.TestCase):
     def test_source_required_data_when_key_is_not_found(self):

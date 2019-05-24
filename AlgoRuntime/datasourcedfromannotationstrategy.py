@@ -1,3 +1,5 @@
+import sdk.param as param
+
 class DataSourcedFromAnnotationStrategy:
     def source_required_data(self, requirement):
         if requirement.annotation is not None and isinstance(requirement.annotation, param.source_from):

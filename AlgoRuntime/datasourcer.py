@@ -1,13 +1,12 @@
 from typing import List
 import logging
 import importlib
-param = importlib.import_module('sdk.param')
 
 import datarequirement as datarequirement
-import datasources.annotations as annotations
-import datasources.hardcoded as hardcoded
-import datasources.s3bucket as s3bucket
-import datasources.thisprocess as thisprocess
+import datasourcedfromannotationstrategy as annotations
+import hardcodeddatastrategy as hardcoded
+import datasourcedfroms3strategy as s3bucket
+import datasourcedfromthisprocessstrategy as thisprocess
 
 class DataSourcer:
     def __init__(self, data_providers = None):
