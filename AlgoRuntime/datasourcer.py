@@ -3,6 +3,7 @@ import logging
 import importlib
 param = importlib.import_module('sdk.param')
 
+import datarequirement as datarequirement
 import datasources.annotations as annotations
 import datasources.hardcoded as hardcoded
 import datasources.s3bucket as s3bucket
@@ -20,7 +21,7 @@ class DataSourcer:
 
         for key, annotation in data_requirements.items():
             logging.debug(f"Searching for '{key}' in data providers.")
-            requirement = DataRequirement(key, annotation)
+            requirement = datarequirement.DataRequirement(key, annotation)
                                     
             for provider in self.data_providers:
                 any_data = provider.source_required_data(requirement)
@@ -33,18 +34,6 @@ class DataSourcer:
                 raise Exception(f"No registered data source that can provide '{key}' exists. This is either a typo or you're trying to get data we cannot source.")
 
         return requested_data        
-
-class DataRequirement:
-    def __init__(self, key, annotation):
-        self.key = key
-        self.annotation = annotation
-
-    def search_key(self):
-        if self.annotation is not None and isinstance(self.annotation, param.uses_data_key):            
-            return self.annotation.lookup_key
-        return self.key
-
-
 
 def default_configuration():
     return [
