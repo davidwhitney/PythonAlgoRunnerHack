@@ -120,6 +120,22 @@ def invoke(my_cool_algo__foo):
     }
 ```
 
+If you're collecting information to use in your QPIs during the processing of your algorithm you can return them to the runtime by adding a key called "__qpis" to your return object.
+
+
+```python
+def invoke(my_cool_algo__foo):
+    # Some logic
+    data_frame = self.process_something(my_cool_algo__foo)
+    data_frame2 = self.process_something(my_cool_algo__foo)
+
+    return {
+        "__qpis": some_dictionary_of_results_or_whatever_you_want_really
+        "friendly_name_one": data_frame,
+        "friendly_name_two": data_frame2
+    }
+```
+
 If you return nothing, we'll throw an error.
 
 # Dependency management

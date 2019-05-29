@@ -11,13 +11,13 @@ class Pipeline:
         }
 
         for key, step in self.steps.items():
-            logging.info(f"Step: '{key}'.'")
+            logging.info(f"Step: '{key}'.")
             start = time.time()
 
             step(context)
             
             end = time.time()
-            time_message = f"Completed: '{key}''. Took {end - start}ms"
+            time_message = f"Completed: '{key}'. Took {end - start}ms"
             context["timings"].append(time_message)
             logging.info(time_message)
 

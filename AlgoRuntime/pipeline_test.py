@@ -25,26 +25,23 @@ class PipelineTest(unittest.TestCase):
     
     
     def test_times_execution_and_adds_it_to_result_for_actual_work(self):
-        result = pipeline.Pipeline({
-            "Step1": lambda ctx: time.sleep(1)
-        }).execute()
+        with self.assertLogs('', level='INFO') as cm:
+            pipeline.Pipeline({
+                "Step1": lambda ctx: time.sleep(1)
+            }).execute()
 
-        self.assertTrue(result["timings"][0].startswith("Completed: 'Step1''. Took 1"))
+            # "INFO:root:Completed: 'Step1'. Took 1"
+
+            
+            self.assertTrue(any(logline.startswith("INFO:root:Completed: 'Step1'. Took 1") for logline in cm.output) )
     
     def test_logs_output(self):
-        logs = io.StringIO()
-        logging_spy = logging.StreamHandler()
-        logging_spy.setStream(logs)
-        logging.getLogger().addHandler(logging_spy)
-
-        result = pipeline.Pipeline({
-            "Step1": lambda ctx: time.sleep(0)
-        }).execute()
-
-        logs.seek(0)
-        log_contents = logs.readlines()
-
-        self.assertIn("blah", log_contents)
+        with self.assertLogs('', level='INFO') as cm:
+            pipeline.Pipeline({
+                "Step1": lambda ctx: time.sleep(0)
+            }).execute()
+            
+            self.assertEqual(cm.output, ["INFO:root:Completed: 'Step1'. Took 0.0ms"])
 
     def mark_as_executed(self):
         self.has_run = True
