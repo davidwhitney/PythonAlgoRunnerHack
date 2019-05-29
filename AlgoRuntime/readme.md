@@ -135,6 +135,19 @@ def invoke(my_cool_algo__foo):
         "friendly_name_two": data_frame2
     }
 ```
+If you're returning only a single data frame, use `default` as your key, like this:
+
+```python
+def invoke(my_cool_algo__foo):
+    # Some logic
+    data_frame = self.process_something(my_cool_algo__foo)
+
+    return {
+        "__qpis": some_dictionary_of_results_or_whatever_you_want_really
+        "default": data_frame,
+    }
+
+```
 
 If you return nothing, we'll throw an error.
 
