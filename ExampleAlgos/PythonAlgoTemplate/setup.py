@@ -13,8 +13,8 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/pypa/sampleproject",
     packages=setuptools.find_packages(),
-    install_requires=[
-          'markdown',
+	install_requires=[
+          'algoruntimesdk',
     ],
     classifiers=[
         "Programming Language :: Python :: 3",

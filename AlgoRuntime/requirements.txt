@@ -1,1 +1,1 @@
-algoruntimesdk>=0.0.2
+algoruntimesdk>=0.0.3

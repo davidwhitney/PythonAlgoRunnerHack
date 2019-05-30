@@ -1,0 +1,17 @@
+{
+    "python.linting.pylintEnabled": true,
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        ".",
+        "-p",
+        "*_test.py"
+    ],
+    "python.testing.pyTestEnabled": false,
+    "python.testing.nosetestsEnabled": true,
+    "python.testing.unittestEnabled": false,
+    "python.testing.pyTestArgs": [
+        ""
+    ],
+    "python.pythonPath": "C:\\Users\\David Whitney\\AppData\\Local\\Programs\\Python\\Python37-32\\python.exe"
+}
