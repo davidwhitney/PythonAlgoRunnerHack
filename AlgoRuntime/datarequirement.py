@@ -1,5 +1,5 @@
 import importlib
-import sdk.param as param
+import algoruntimesdk as param
 
 class DataRequirement:
     def __init__(self, key, annotation):

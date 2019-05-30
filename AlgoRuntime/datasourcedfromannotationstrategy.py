@@ -1,4 +1,4 @@
-import sdk.param as param
+import algoruntimesdk as param
 
 class DataSourcedFromAnnotationStrategy:
     def source_required_data(self, requirement):
